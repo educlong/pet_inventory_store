@@ -1,15 +1,18 @@
+import axios from 'axios'
+
 // fetches all pet data from the server
-export function FetchPets(setPets, setIsLoaded)
+export const FetchPets = async (setPets, setIsLoaded) =>
 {
-    fetch("http://localhost:3001/api?act=getall")
-    .then(res => res.json())
-    .then(
-    (result) => {
+    try{
+        const res = await axios.get('http://localhost:3001/api?act=getall')
+        const result = await res.data
         let _pets = [];
         result.forEach(pet => _pets.push({...pet, isUpdate: false}) );
         setPets(_pets);
         setIsLoaded(true);
-    })
+    }catch(ex){
+        console.log(ex)
+    }
 }
 
 // Inserts a pet with hardcoded data in the URL for each query parameter, we 
@@ -20,14 +23,14 @@ export function FetchPets(setPets, setIsLoaded)
 // fetch(url)
 // .then( ... )...
 //
-export function AddPet(pet, setPets, setIsLoaded)
+export const AddPet = async (pet, setPets, setIsLoaded) =>
 {
-    fetch(`http://localhost:3001/api?act=add&animal=${pet.animal}&description=${pet.description}&age=${pet.age}&price=${pet.price}`)
-    .then(res => res.json())
-    .then(
-    (result) => {
+    try{
+        await axios.get(`http://localhost:3001/api?act=add&animal=${pet.animal}&description=${pet.description}&age=${pet.age}&price=${pet.price}`)
         FetchPets(setPets, setIsLoaded);
-    })    
+    }catch(ex){
+        console.log(ex)
+    }
 }
 
 // Deletes a pet from the pet inventory, using a hardcoded id query parameter
@@ -39,38 +42,39 @@ export function AddPet(pet, setPets, setIsLoaded)
 // .then( ... )...
 //
 // 
-export function DeletePet(pet, setPets, setIsLoaded)
+export const DeletePet = async (pet, setPets, setIsLoaded) =>
 {
-    fetch(`http://localhost:3001/api?act=delete&id=${pet.id}`)
-    .then(res => res.json())
-    .then(
-    (result) => {
+    try{
+        await axios.get(`http://localhost:3001/api?act=delete&id=${pet.id}`)
         FetchPets(setPets, setIsLoaded);
-    })    
+    }catch(ex){
+        console.log(ex)
+    }
 }
 
 // Updates a pet in the pet inventory.  Again we use hardcoded data but 
 // could build a custom fetch URL string.
-export function UpdatePet(pet, setPets, setIsLoaded)
+export const UpdatePet = async (pet, setPets, setIsLoaded) =>
 {
-    fetch(`http://localhost:3001/api?act=update&id=${pet.id}&animal=${pet.animal}&description=${pet.description}&age=${pet.age}&price=${pet.price}`)
-    .then(res => res.json())
-    .then(
-    (result) => {
+    try{
+        await axios.get(`http://localhost:3001/api?act=update&id=${pet.id}&animal=${pet.animal}&description=${pet.description}&age=${pet.age}&price=${pet.price}`)
         FetchPets(setPets, setIsLoaded);
-    });
+    }catch(ex){
+        console.log(ex)
+    }
 }  
     
 // Searches for pets in the pet inventory.  Again we use hardcoded data but
 // we could build a custom fetch URL string.
-export function SearchPet(word, setSearchResults)
+export const SearchPet = async (word, setSearchResults) =>
 {
-    fetch(`http://localhost:3001/api?act=search&term=${word.trim()!=='' ? word.trim() : ""}`)
-    .then(res => res.json())
-    .then(
-    (result) => {
+    try{
+        const res = await axios.get(`http://localhost:3001/api?act=search&term=${word.trim()!=='' ? word.trim() : ""}`)
+        const result = await res.data
         let _pets = [];
         result.forEach(pet => _pets.push({...pet, isUpdate: false}) );
         setSearchResults(_pets);
-    });
+    }catch(ex){
+        console.log(ex)
+    }
 }
